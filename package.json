@@ -1,0 +1,15 @@
+{
+  "name": "real-estate-monorepo",
+  "version": "1.0.0",
+  "description": "This is a full-stack real estate website project with the following stack:",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^5.1.1"
+  }
+}
