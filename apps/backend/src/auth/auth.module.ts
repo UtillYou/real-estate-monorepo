@@ -8,15 +8,16 @@ import { PassportModule } from '@nestjs/passport';
 import { APP_GUARD } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from '../users/user.entity';
+import { RefreshToken } from './refresh-token.entity';
 
 @Module({
   imports: [
     PassportModule,
     JwtModule.register({
       secret: process.env.JWT_SECRET || 'dev_secret',
-      signOptions: { expiresIn: '1d' },
+      signOptions: { expiresIn: '1h' }, // 1 hour expiration for access tokens
     }),
-    TypeOrmModule.forFeature([User]),
+    TypeOrmModule.forFeature([User, RefreshToken]),
   ],
   controllers: [AuthController],
   providers: [

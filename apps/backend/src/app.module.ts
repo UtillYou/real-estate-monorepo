@@ -8,6 +8,7 @@ import { AuthModule } from './auth/auth.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './users/user.entity';
 import { Listing } from './listings/listing.entity';
+import { RefreshToken } from './auth/refresh-token.entity';
 import { ListingsModule } from './listings/listings.module';
 import { UsersModule } from './users/users.module';
 
@@ -24,10 +25,10 @@ import { UsersModule } from './users/users.module';
       username: process.env.POSTGRES_USER || 'postgres',
       password: process.env.POSTGRES_PASSWORD || 'postgres',
       database: process.env.POSTGRES_DB || 'realestate',
-      entities: [User, Listing],
+      entities: [User, Listing, RefreshToken],
       synchronize: true, // set false in production
     }),
-    TypeOrmModule.forFeature([User]),
+    TypeOrmModule.forFeature([User, RefreshToken]),
     AuthModule,
     ListingsModule,
     UploadsModule,

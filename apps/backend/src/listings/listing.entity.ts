@@ -1,5 +1,14 @@
 import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 
+export enum PropertyType {
+  APARTMENT = 'APARTMENT',
+  HOUSE = 'HOUSE',
+  CONDO = 'CONDO',
+  TOWNHOUSE = 'TOWNHOUSE',
+  LAND = 'LAND',
+  OTHER = 'OTHER'
+}
+
 @Entity('listings')
 export class Listing {
   @PrimaryGeneratedColumn()
@@ -10,6 +19,13 @@ export class Listing {
 
   @Column({ type: 'text' })
   description: string;
+
+  @Column({
+    type: 'enum',
+    enum: PropertyType,
+    default: PropertyType.APARTMENT
+  })
+  propertyType: PropertyType;
 
   @Column('decimal', {
     transformer: {
@@ -22,8 +38,29 @@ export class Listing {
   @Column()
   address: string;
 
+  @Column()
+  city: string;
+
   @Column({ nullable: true })
-  imageUrl: string;
+  state: string;
+
+  @Column({ nullable: true })
+  zipCode: string;
+
+  @Column('int')
+  bedrooms: number;
+
+  @Column('decimal', { precision: 3, scale: 1 })
+  bathrooms: number;
+
+  @Column('int')
+  squareFeet: number;
+
+  @Column('int', { nullable: true })
+  yearBuilt: number;
+
+  @Column('jsonb', { default: [] })
+  images: Array<{ url: string; name: string }>;
 
   @Column({ default: true })
   isActive: boolean;
