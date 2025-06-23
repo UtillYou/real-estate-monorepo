@@ -1,6 +1,6 @@
 import { IsString, IsNumber, IsBoolean, IsOptional, IsArray, IsEnum, IsInt, Min, Max, ValidateNested } from 'class-validator';
 import { Type } from 'class-transformer';
-import { PropertyType } from './listing.entity';
+import { PropertyType } from './types/property-type.enum';
 
 class ImageDto {
   @IsString()
@@ -50,9 +50,10 @@ export class CreateListingDto {
   @IsNumber()
   yearBuilt?: number;
 
+  @IsOptional()
   @IsArray()
-  @IsString({ each: true })
-  features: string[];
+  @IsNumber({}, { each: true })
+  featureIds?: number[];
 
   @IsArray()
   @IsString({ each: true })
@@ -114,8 +115,8 @@ export class UpdateListingDto {
 
   @IsOptional()
   @IsArray()
-  @IsString({ each: true })
-  features?: string[];
+  @IsNumber({}, { each: true })
+  featureIds?: number[]; // Array of feature IDs
 
   @IsOptional()
   @IsArray()

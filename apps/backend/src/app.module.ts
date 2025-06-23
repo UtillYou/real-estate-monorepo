@@ -11,6 +11,8 @@ import { Listing } from './listings/listing.entity';
 import { RefreshToken } from './auth/refresh-token.entity';
 import { ListingsModule } from './listings/listings.module';
 import { UsersModule } from './users/users.module';
+import { Feature } from './features/feature.entity';
+import { FeaturesModule } from './features/features.module';
 
 @Module({
   imports: [
@@ -25,14 +27,15 @@ import { UsersModule } from './users/users.module';
       username: process.env.POSTGRES_USER || 'postgres',
       password: process.env.POSTGRES_PASSWORD || 'postgres',
       database: process.env.POSTGRES_DB || 'realestate',
-      entities: [User, Listing, RefreshToken],
+      entities: [User, Listing, RefreshToken, Feature],
       synchronize: true, // set false in production
     }),
     TypeOrmModule.forFeature([User, RefreshToken]),
     AuthModule,
     ListingsModule,
     UploadsModule,
-    UsersModule
+    UsersModule,
+    FeaturesModule
   ],
   controllers: [AppController],
   providers: [AppService],

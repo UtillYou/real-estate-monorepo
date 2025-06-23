@@ -1,13 +1,6 @@
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
-
-export enum PropertyType {
-  APARTMENT = 'APARTMENT',
-  HOUSE = 'HOUSE',
-  CONDO = 'CONDO',
-  TOWNHOUSE = 'TOWNHOUSE',
-  LAND = 'LAND',
-  OTHER = 'OTHER'
-}
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, ManyToMany, JoinTable } from 'typeorm';
+import { PropertyType } from './types/property-type.enum';
+import { Feature } from '../features/feature.entity';
 
 @Entity('listings')
 export class Listing {
@@ -61,6 +54,14 @@ export class Listing {
 
   @Column('jsonb', { default: [] })
   images: Array<{ url: string; name: string }>;
+
+  @ManyToMany(() => Feature, { eager: true })
+  @JoinTable({
+    name: 'listing_features',
+    joinColumn: { name: 'listing_id', referencedColumnName: 'id' },
+    inverseJoinColumn: { name: 'feature_id', referencedColumnName: 'id' },
+  })
+  features: Feature[];
 
   @Column({ default: true })
   isActive: boolean;
