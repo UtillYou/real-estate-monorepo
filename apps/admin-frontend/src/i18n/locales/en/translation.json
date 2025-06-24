@@ -51,10 +51,11 @@
     "status": "Status",
     "active": "Active",
     "inactive": "Inactive",
-    "created": "Created",
+    "createdAt": "Created",
     "lastUpdated": "Last Updated",
     "listingsManagement": "Listings Management",
-    "searchPlaceholder": "Search by title or address..."
+    "searchPlaceholder": "Search by title or address...",
+    "showingProperties": "Showing {{from}}-{{to}} of {{total}} properties"
   },
   "features": {
     "title": "Features Management",
@@ -102,5 +103,19 @@
     "propertyDetails": "Property Details",
     "featuresAndAmenities": "Features & Amenities",
     "descriptionAndImages": "Description & Images"
+  },
+  "users": {
+    "title": "Users Management",
+    "createUser": "Create User",
+    "editUser": "Edit User",
+    "name": "Name",
+    "email": "Email",
+    "role": "Role",
+    "isActive": "Is Active",
+    "joined": "Joined",
+    "admin": "Admin",
+    "actions": "Actions",
+    "avatar": "Avatar",
+    "password": "Password"
   }
 }

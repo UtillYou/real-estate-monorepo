@@ -4,6 +4,7 @@ import { UserOutlined } from '@ant-design/icons';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { api } from '../api';
 import { User } from '../types';
+import { useTranslation } from 'react-i18next';
 
 interface Props {
   data: User[];
@@ -13,6 +14,7 @@ interface Props {
 
 const UsersTable: React.FC<Props> = ({ data, loading, onEdit }) => {
   const queryClient = useQueryClient();
+   const { t } = useTranslation();
   
   const deleteMutation = useMutation({
     mutationFn: async (id: number) => {
@@ -53,7 +55,7 @@ const UsersTable: React.FC<Props> = ({ data, loading, onEdit }) => {
 
   const columns = [
     {
-      title: 'Name',
+      title: t('users.name', 'Name'),
       dataIndex: 'name',
       key: 'name',
       render: (text: string, record: User) => (
@@ -72,12 +74,12 @@ const UsersTable: React.FC<Props> = ({ data, loading, onEdit }) => {
       ),
     },
     {
-      title: 'Email',
+      title: t('users.email', 'Email'),
       dataIndex: 'email',
       key: 'email',
     },
     {
-      title: 'Role',
+      title: t('users.role', 'Role'),
       dataIndex: 'role',
       key: 'role',
       render: (role: string) => (
@@ -85,13 +87,13 @@ const UsersTable: React.FC<Props> = ({ data, loading, onEdit }) => {
       ),
     },
     {
-      title: 'Joined',
+      title: t('users.joined', 'Joined'),
       dataIndex: 'createdAt',
       key: 'createdAt',
       render: (date: string) => new Date(date).toLocaleDateString(),
     },
     {
-      title: 'Admin',
+      title: t('users.admin', 'Admin'),
       key: 'admin',
       render: (_: any, record: User) => (
         <Switch 
@@ -102,7 +104,7 @@ const UsersTable: React.FC<Props> = ({ data, loading, onEdit }) => {
       ),
     },
     {
-      title: 'Actions',
+      title: t('common.actions', 'Actions'),
       key: 'actions',
       render: (_: any, record: User) => (
         <Space>
@@ -110,7 +112,7 @@ const UsersTable: React.FC<Props> = ({ data, loading, onEdit }) => {
             onClick={() => onEdit(record)}
             style={{ marginRight: 8 }}
           >
-            Edit
+            {t('common.edit', 'Edit')}
           </Button>
           <Popconfirm 
             title="Are you sure you want to delete this user?" 
@@ -118,7 +120,7 @@ const UsersTable: React.FC<Props> = ({ data, loading, onEdit }) => {
             okText="Yes"
             cancelText="No"
           >
-            <Button danger>Delete</Button>
+            <Button danger>{t('common.delete', 'Delete')}</Button>
           </Popconfirm>
         </Space>
       ),

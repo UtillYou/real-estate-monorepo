@@ -2,6 +2,7 @@ import React from 'react';
 import { Form, Input, Button, Switch, FormProps, Space, Upload, Avatar } from 'antd';
 import { UserOutlined, UploadOutlined } from '@ant-design/icons';
 import { User } from '../types';
+import { useTranslation } from 'react-i18next';
 
 interface UserFormProps {
   initialValues?: Partial<User>;
@@ -16,6 +17,7 @@ const UserForm: React.FC<UserFormProps> = ({
   onCancel,
   loading = false,
 }) => {
+  const { t } = useTranslation();
   const [form] = Form.useForm();
   const isEdit = !!initialValues?.id;
 
@@ -32,7 +34,7 @@ const UserForm: React.FC<UserFormProps> = ({
     >
       <Form.Item
         name="avatar"
-        label="Profile Picture"
+        label={t('users.avatar', 'Profile Picture')}
         valuePropName="fileList"
         getValueFromEvent={(e) => e?.fileList}
       >
@@ -51,7 +53,7 @@ const UserForm: React.FC<UserFormProps> = ({
           ) : (
             <div>
               <UserOutlined style={{ fontSize: 24 }} />
-              <div style={{ marginTop: 8 }}>Upload</div>
+              <div style={{ marginTop: 8 }}>{t('common.upload', 'Upload')}</div>
             </div>
           )}
         </Upload>
@@ -59,7 +61,7 @@ const UserForm: React.FC<UserFormProps> = ({
 
       <Form.Item
         name="name"
-        label="Full Name"
+        label={t('users.name', 'Full Name')}
         rules={[{ required: true, message: 'Please input the full name!' }]}
       >
         <Input placeholder="Enter full name" />
@@ -67,7 +69,7 @@ const UserForm: React.FC<UserFormProps> = ({
 
       <Form.Item
         name="email"
-        label="Email"
+        label={t('users.email', 'Email')}
         rules={[
           { required: true, message: 'Please input the email!' },
           { type: 'email', message: 'Please enter a valid email!' },
@@ -79,7 +81,7 @@ const UserForm: React.FC<UserFormProps> = ({
       {!isEdit && (
         <Form.Item
           name="password"
-          label="Password"
+          label={t('users.password', 'Password')}
           rules={[
             { required: !isEdit, message: 'Please input the password!' },
             { min: 6, message: 'Password must be at least 6 characters!' },
@@ -91,7 +93,7 @@ const UserForm: React.FC<UserFormProps> = ({
 
       <Form.Item
         name="role"
-        label="Role"
+        label={t('users.role', 'Role')}
         valuePropName="checked"
         initialValue={false}
       >
@@ -105,10 +107,10 @@ const UserForm: React.FC<UserFormProps> = ({
       <Form.Item>
         <Space>
           <Button type="primary" htmlType="submit" loading={loading}>
-            {isEdit ? 'Update' : 'Create'}
+            {isEdit ? t('common.update', 'Update') : t('common.create', 'Create')}
           </Button>
           <Button onClick={onCancel} disabled={loading}>
-            Cancel
+            {t('common.cancel', 'Cancel')}
           </Button>
         </Space>
       </Form.Item>

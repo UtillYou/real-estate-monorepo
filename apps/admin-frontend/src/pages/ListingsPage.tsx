@@ -38,35 +38,15 @@ const ListingsPage: React.FC = () => {
   const [editing, setEditing] = useState<Listing | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [searchText, setSearchText] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
 
-  // Sync search text with search term when it changes from outside
-  useEffect(() => {
-    setSearchText(searchTerm);
-  }, [searchTerm]);
-
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
   
   // Fetch listings data
   const { data: listings = [], isLoading } = useQuery({
     queryKey: ['listings', searchTerm],
     queryFn: () => fetchListings({ search: searchTerm }),
   });
-  
-  // Re-render when language changes
-  const [currentLang, setCurrentLang] = useState<string>(i18n.language);
-  
-  useEffect(() => {
-    const handleLanguageChange = (lng: string) => {
-      setCurrentLang(lng);
-    };
-    
-    i18n.on('languageChanged', handleLanguageChange);
-    return () => {
-      i18n.off('languageChanged', handleLanguageChange);
-    };
-  }, [i18n]);
   
 
   const handleCreate = () => {

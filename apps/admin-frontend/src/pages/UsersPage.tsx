@@ -5,11 +5,14 @@ import { api } from '../api';
 import { User } from '../types';
 import UsersTable from '../components/UsersTable';
 import UserForm from '../components/UserForm';
+import { useTranslation } from 'react-i18next';
 
 const UsersPage: React.FC = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [editingUser, setEditingUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(false);
+
+  const { t } = useTranslation();
 
   const { data: users = [], isLoading } = useQuery<User[]>({
     queryKey: ['users'],
@@ -56,7 +59,7 @@ const UsersPage: React.FC = () => {
           onClick={handleCreate}
           style={{ marginBottom: 16 }}
         >
-          Add User
+          {t('users.createUser', 'Add user')}
         </Button>
       </div>
       
@@ -67,7 +70,7 @@ const UsersPage: React.FC = () => {
       />
       
       <Modal
-        title={editingUser ? 'Edit User' : 'Create User'}
+        title={editingUser ? t('users.editUser', 'Edit User') : t('users.createUser', 'Create User')}
         open={isModalVisible}
         onCancel={handleModalCancel}
         footer={null}
