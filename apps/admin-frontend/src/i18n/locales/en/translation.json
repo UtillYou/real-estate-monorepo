@@ -73,6 +73,11 @@
     "COMMERCIAL": "Commercial",
     "OTHER": "Other"
   },
+  "error": {
+    "pageNotFound": "Page Not Found",
+    "pageNotFoundDescription": "The page you are looking for might have been removed, had its name changed, or is temporarily unavailable.",
+    "backHome": "Back Home"
+  },
   "form": {
     "title": "Title",
     "description": "Description",

@@ -18,6 +18,11 @@
     "refresh": "刷新",
     "reset": "重置"
   },
+  "error": {
+    "pageNotFound": "页面未找到",
+    "pageNotFoundDescription": "您访问的页面可能已被删除、名称已更改或暂时不可用。",
+    "backHome": "返回首页"
+  },
   "dashboard": {
     "title": "控制台",
     "totalListings": "总房源",

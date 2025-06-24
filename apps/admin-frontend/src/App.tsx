@@ -15,10 +15,12 @@ import ListingsPage from './pages/ListingsPage';
 import UsersPage from './pages/UsersPage';
 import FeaturesPage from './pages/FeaturesPage';
 import DashboardPage from './pages/DashboardPage';
+import RolesPage from './pages/RolesPage';
 import { I18nextProvider, useTranslation } from 'react-i18next';
 import i18n from './i18n/i18n';
 import '@refinedev/antd/dist/reset.css';
 import 'antd/dist/reset.css';
+import CustomErrorPage from './components/CustomErrorPage';
 
 // Add a loading component for Suspense
 const LoadingFallback = () => (
@@ -203,7 +205,20 @@ const AppContent: React.FC = () => {
                         }
                       />
                       
-                      <Route path="*" element={<ErrorComponent />} />
+                      <Route
+                        path="/roles"
+                        element={
+                          <PrivateRoute
+                            element={
+                              <SidebarLayout>
+                                <RolesPage />
+                              </SidebarLayout>
+                            }
+                          />
+                        }
+                      />
+                      
+                      <Route path="*" element={<CustomErrorPage />} />
                     </Routes>
                   </Refine>
                 </BrowserRouter>
