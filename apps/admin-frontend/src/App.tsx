@@ -20,7 +20,7 @@ import { I18nextProvider, useTranslation } from 'react-i18next';
 import i18n from './i18n/i18n';
 import '@refinedev/antd/dist/reset.css';
 import 'antd/dist/reset.css';
-import CustomErrorPage from './components/CustomErrorPage';
+import CustomErrorPage from './pages/CustomErrorPage';
 
 // Add a loading component for Suspense
 const LoadingFallback = () => (
