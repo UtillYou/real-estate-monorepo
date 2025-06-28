@@ -23,6 +23,10 @@
     "uploading": "上传中...",
     "upload": "上传"
   },
+  "errors": {
+    "imageOnly": "只能上传图片文件！",
+    "imageTooLarge": "图片大小不能超过5MB！"
+  },
   "error": {
     "pageNotFound": "页面未找到",
     "pageNotFoundDescription": "您访问的页面可能已被删除、名称已更改或暂时不可用。",

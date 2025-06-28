@@ -25,6 +25,10 @@
     "uploading": "Uploading...",
     "upload": "Upload"
   },
+  "errors": {
+    "imageOnly": "You can only upload image files!",
+    "imageTooLarge": "Image must be smaller than 5MB!"
+  },
   "dashboard": {
     "title": "Dashboard",
     "totalListings": "Total Listings",

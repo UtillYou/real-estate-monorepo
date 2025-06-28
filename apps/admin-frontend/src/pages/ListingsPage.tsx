@@ -71,10 +71,6 @@ const ListingsPage: React.FC = () => {
       yearBuilt: values.yearBuilt ? Number(values.yearBuilt) : undefined,
       // Ensure features is an array
       features: Array.isArray(values.features) ? values.features : [],
-      // Ensure imageUrls is an array
-      imageUrls: Array.isArray(values.imageUrls) 
-        ? values.imageUrls 
-        : values.imageUrls ? [values.imageUrls] : [],
       isActive: !!values.isActive,
     } as any; // Type assertion since we're handling the type conversion
     

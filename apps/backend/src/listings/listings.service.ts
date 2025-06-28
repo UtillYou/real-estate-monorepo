@@ -63,7 +63,7 @@ export class ListingsService {
     
     if (!listing) throw new NotFoundException('Listing not found');
     
-    if (updateDto.featureIds) {
+    if (updateDto.featureIds && updateDto.featureIds.length > 0) {
       const features = await this.featuresService.findByIds(updateDto.featureIds);
       listing.features = features;
       delete updateDto.featureIds; // Remove to prevent overwrite in Object.assign

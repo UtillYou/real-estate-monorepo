@@ -23,57 +23,52 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
 }) => {
   const { t } = useTranslation();
   const [fileList, setFileList] = useState<UploadFile[]>([]);
-  const [uploading, setUploading] = useState(false);
 
   // Initialize fileList from value prop
   useEffect(() => {
     if (Array.isArray(value) && value.length > 0) {
-      const files = value.map((img, index) => ({
-        uid: `-${index + 1}`,
-        name: img.name,
-        status: 'done' as const,
-        url: img.url,
-        response: { url: img.url, name: img.name },
-      }));
-      setFileList(files);
-    } else {
-      setFileList([]);
-    }
+      // Only update if the value has actually changed
+      const currentUrls = fileList.map(file => file.url).sort().join(',');
+      const newUrls = value.map(img => img.url).sort().join(',');
+      console.log('currentUrls', currentUrls);
+      console.log('newUrls', newUrls);
+      if (currentUrls !== newUrls) {
+        const files = value.map((img, index) => ({
+          uid: `-${index + 1}`,
+          name: img.name,
+          status: 'done' as const,
+          url: img.url,
+          response: { url: img.url, name: img.name },
+        }));
+        setFileList(files);
+      }
+    } 
   }, [value]);
 
-  const handleChange = useCallback((info: UploadChangeParam<UploadFile<UploadResponse>>) => {
-    let newFileList = [...info.fileList];
+  const handleChange = (info: UploadChangeParam<UploadFile<UploadResponse>>) => {
+    try {
+      console.log('handleChange', info);
+      setFileList(info.fileList);
 
-    // Limit the number of uploaded files
-    if (newFileList.length > maxCount) {
-      newFileList = newFileList.slice(0, maxCount);
-      message.warning(t('common.maxImageCount', { maxCount }));
+      if (info.file.status === 'done') {
+        // Successfully uploaded
+        const uploadedImages = info.fileList
+          .filter(file => file.status === 'done')
+          .map(file => ({
+            url: file.response?.url || file.url || '',
+            name: file.response?.name || file.name || 'image',
+          }));
+
+        onChange?.(uploadedImages);
+        message.success(t('common.uploadSuccess', { fileName: info.file.name }));
+      } else if (info.file.status === 'error') {
+        console.error('Upload error:', info.file.error);
+        message.error(t('common.uploadFailed', { fileName: info.file.name }));
+      }
+    } catch (error) {
+      console.error('Error in handleChange:', error);
     }
-
-    // Handle file upload status
-    if (info.file.status === 'uploading') {
-      setUploading(true);
-      setFileList(newFileList);
-      return;
-    }
-
-    if (info.file.status === 'done') {
-      // Successfully uploaded
-      const uploadedImages = newFileList
-        .filter(file => file.status === 'done')
-        .map(file => ({
-          url: file.response?.url || file.url || '',
-          name: file.response?.name || file.name || 'image',
-        }));
-
-      setUploading(false);
-      onChange?.(uploadedImages);
-      message.success(t('common.uploadSuccess', { fileName: info.file.name }));
-    } else if (info.file.status === 'error') {
-      setUploading(false);
-      message.error(t('common.uploadFailed', { fileName: info.file.name }));
-    }
-  }, [maxCount, onChange, t]);
+  };
 
   const handleRemove = useCallback((file: UploadFile) => {
     const newFileList = fileList.filter(item => item.uid !== file.uid);
@@ -91,14 +86,10 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
   }, [fileList, onChange]);
 
   const uploadButton = (
-    <div>
-      {uploading ? <div>{t('common.uploading')}</div> :
-        <>
-          <PlusOutlined />
-          <div style={{ marginTop: 8 }}>{t('common.upload')}</div>
-        </>}
-
-    </div>
+    <button style={{ border: 0, background: 'none' }} type="button">
+      <PlusOutlined />
+      <div style={{ marginTop: 8 }}>Upload</div>
+    </button>
   );
 
   return (
@@ -111,6 +102,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
       multiple
       accept="image/*"
       name="file"
+      withCredentials
       showUploadList={{
         showRemoveIcon: true,
         showPreviewIcon: true,
@@ -118,16 +110,17 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
       beforeUpload={(file: RcFile) => {
         const isImage = file.type.startsWith('image/');
         if (!isImage) {
-          message.error('You can only upload image files!');
+          message.error(t('errors.imageOnly'));
           return Upload.LIST_IGNORE;
         }
         const isLt5M = file.size / 1024 / 1024 < 5;
         if (!isLt5M) {
-          message.error('Image must be smaller than 5MB!');
+          message.error(t('errors.imageTooLarge'));
           return Upload.LIST_IGNORE;
         }
         return true;
       }}
+
     >
       {fileList.length >= maxCount ? null : uploadButton}
     </Upload>

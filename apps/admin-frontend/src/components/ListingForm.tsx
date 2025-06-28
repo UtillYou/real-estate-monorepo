@@ -104,7 +104,7 @@ const ListingForm: React.FC<Props> = ({ initialValues, onSubmit, loading, onCanc
 
   const handleFinish = async (values: any) => {
     try {
-      
+      console.log('handleFinish', values);
       // Use the selectedFeatureIds as the source of truth
       const finalFeatureIds = [...selectedFeatureIds];
       
@@ -381,8 +381,6 @@ const ListingForm: React.FC<Props> = ({ initialValues, onSubmit, loading, onCanc
             <Form.Item
               name="images"
               label={t('form.images')}
-              valuePropName="fileList"
-              getValueFromEvent={(e) => e.fileList}
             >
               <ImageUploader maxCount={10} />
             </Form.Item>
