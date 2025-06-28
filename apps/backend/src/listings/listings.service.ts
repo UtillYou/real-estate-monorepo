@@ -105,12 +105,12 @@ export class ListingsService {
       queryBuilder.andWhere('listing.bathrooms >= :minBathrooms', { minBathrooms });
     }
     
-    // Handle area range
+    // Handle area range (using squareFeet column)
     if (minArea !== undefined) {
-      queryBuilder.andWhere('listing.area >= :minArea', { minArea });
+      queryBuilder.andWhere('listing.squareFeet >= :minArea', { minArea });
     }
     if (maxArea !== undefined) {
-      queryBuilder.andWhere('listing.area <= :maxArea', { maxArea });
+      queryBuilder.andWhere('listing.squareFeet <= :maxArea', { maxArea });
     }
     
     // Handle boolean filters

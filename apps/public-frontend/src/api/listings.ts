@@ -41,8 +41,25 @@ export interface SearchFilters extends SearchParams {
   hasPool?: boolean;
 }
 
+// Create axios instance with base config
+const api = axios.create({
+  baseURL: '/api',
+  headers: {
+    'Content-Type': 'application/json',
+  },
+});
+
+// Request interceptor to add auth token if available
+api.interceptors.request.use((config) => {
+  const token = localStorage.getItem('token');
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+});
+
 export const fetchListings = (params?: SearchFilters) => 
-  axios.get<Listing[]>('/api/listings', { 
+  api.get<Listing[]>('/listings', { 
     params: {
       ...params,
       // Convert boolean filters to strings that can be properly serialized
@@ -54,15 +71,25 @@ export const fetchListings = (params?: SearchFilters) =>
   });
 
 export const fetchListing = (id: number) => 
-  axios.get<Listing>(`/api/listings/${id}`);
+  api.get<Listing>(`/listings/${id}`);
 
 export const fetchFeaturedListings = () => 
-  axios.get<Listing[]>('/api/listings/featured');
+  api.get<Listing[]>('/listings/featured');
 
 export const fetchLatestListings = (limit: number = 4) => 
-  axios.get<Listing[]>('/api/listings', { 
+  api.get<Listing[]>('/listings', { 
     params: { 
       sortBy: 'newest',
-      limit
+      limit: limit.toString()
     } 
+  });
+
+// For typeahead search, we'll use the main listings endpoint with search query
+export const searchListings = (query: string, limit: number = 5) =>
+  api.get<Listing[]>('/listings', {
+    params: {
+      search: query,
+      limit: limit.toString(),
+      sortBy: 'relevance' // Assuming your backend supports this
+    }
   });
