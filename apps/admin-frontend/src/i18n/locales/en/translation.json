@@ -18,7 +18,12 @@
     "administrator": "Administrator",
     "user": "User",
     "refresh": "Refresh",
-    "reset": "Reset"
+    "reset": "Reset",
+    "maxImageCount": "You can only upload up to {{maxCount}} images",
+    "uploadSuccess": "{{fileName}} uploaded successfully",
+    "uploadFailed": "{{fileName}} upload failed",
+    "uploading": "Uploading...",
+    "upload": "Upload"
   },
   "dashboard": {
     "title": "Dashboard",
@@ -36,9 +41,10 @@
     "dashboard": "Dashboard",
     "listings": "Listings",
     "features": "Features",
-    "userManagement": "User Management",
+    "userManagement": "System Management",
     "users": "Users",
-    "roles": "Roles & Permissions"
+    "roles": "Roles & Permissions",
+    "dataGenerator": "Data Generator"
   },
   "listings": {
     "title": "Listings",
@@ -91,7 +97,10 @@
     "squareFeet": "Square Feet",
     "yearBuilt": "Year Built",
     "propertyType": "Property Type",
+    "status": "Status",
     "isActive": "Is Active",
+    "active": "Active",
+    "inactive": "Inactive",
     "images": "Images",
     "features": "Features",
     "selectFeatures": "Select Features",

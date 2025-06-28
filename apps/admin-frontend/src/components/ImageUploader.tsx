@@ -3,6 +3,7 @@ import { Upload, message } from 'antd';
 import type { UploadFile, UploadChangeParam, RcFile } from 'antd/es/upload/interface';
 import { PlusOutlined } from '@ant-design/icons';
 import { ImageData } from '../api/listings';
+import { useTranslation } from 'react-i18next';
 
 interface UploadResponse {
   url: string;
@@ -20,6 +21,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
   onChange,
   maxCount = 8,
 }) => {
+  const { t } = useTranslation();
   const [fileList, setFileList] = useState<UploadFile[]>([]);
   const [uploading, setUploading] = useState(false);
 
@@ -45,7 +47,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
     // Limit the number of uploaded files
     if (newFileList.length > maxCount) {
       newFileList = newFileList.slice(0, maxCount);
-      message.warning(`You can only upload up to ${maxCount} images`);
+      message.warning(t('common.maxImageCount', { maxCount }));
     }
 
     // Handle file upload status
@@ -63,35 +65,39 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
           url: file.response?.url || file.url || '',
           name: file.response?.name || file.name || 'image',
         }));
-      
+
       setUploading(false);
       onChange?.(uploadedImages);
-      message.success(`${info.file.name} uploaded successfully`);
+      message.success(t('common.uploadSuccess', { fileName: info.file.name }));
     } else if (info.file.status === 'error') {
       setUploading(false);
-      message.error(`${info.file.name} upload failed`);
+      message.error(t('common.uploadFailed', { fileName: info.file.name }));
     }
-  }, [maxCount, onChange]);
+  }, [maxCount, onChange, t]);
 
   const handleRemove = useCallback((file: UploadFile) => {
     const newFileList = fileList.filter(item => item.uid !== file.uid);
     setFileList(newFileList);
-    
+
     const uploadedImages = newFileList
       .filter(f => f.status === 'done')
       .map(f => ({
         url: f.response?.url || f.url || '',
         name: f.response?.name || f.name || 'image',
       }));
-    
+
     onChange?.(uploadedImages);
     return true;
   }, [fileList, onChange]);
 
   const uploadButton = (
     <div>
-      {uploading ? <div>Uploading...</div> : <PlusOutlined />}
-      <div style={{ marginTop: 8 }}>Upload</div>
+      {uploading ? <div>{t('common.uploading')}</div> :
+        <>
+          <PlusOutlined />
+          <div style={{ marginTop: 8 }}>{t('common.upload')}</div>
+        </>}
+
     </div>
   );
 

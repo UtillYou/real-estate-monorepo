@@ -60,3 +60,7 @@ export const fetchListing = (id: number) => axios.get<Listing>(`/api/listings/${
 export const createListing = (data: CreateListingDto) => axios.post<Listing>('/api/listings', data);
 export const updateListing = (id: number, data: UpdateListingDto) => axios.patch<Listing>(`/api/listings/${id}`, data);
 export const deleteListing = (id: number) => axios.delete(`/api/listings/${id}`);
+
+// Delete all listings
+// Note: This is a protected endpoint that requires admin privileges
+export const deleteAllListings = () => axios.delete('/api/listings/all');

@@ -1,5 +1,5 @@
 import React, { useCallback, useMemo } from 'react';
-import { Layout, Menu, Button, Avatar, Typography, Divider, theme, Space } from 'antd';
+import { Layout, Menu, Button, Avatar, Typography, theme } from 'antd';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { 
   LogoutOutlined, 
@@ -7,9 +7,9 @@ import {
   UnorderedListOutlined, 
   UserOutlined,
   UserSwitchOutlined,
-  TeamOutlined,
+  SettingOutlined,
   TagsOutlined,
-  GlobalOutlined
+  DatabaseOutlined
 } from '@ant-design/icons';
 import { useAuth } from '../AuthContext';
 import { useTranslation } from 'react-i18next';
@@ -38,37 +38,42 @@ function hasChildren(item: MenuItem): item is MenuItemWithChildren {
   return 'children' in item && Array.isArray(item.children);
 }
 
-const getMenuItems = (t: (key: string, defaultValue?: string) => string, isAdmin: boolean): MenuItem[] => [
+const getMenuItems = (t: any, isAdmin: boolean): MenuItem[] => [
   {
     key: '/',
-    label: t('menu.dashboard'),
+    label: t('menu.dashboard', 'Dashboard'),
     icon: <DashboardOutlined style={{ fontSize: '16px' }} />,
   },
   {
     key: '/listings',
-    label: t('menu.listings'),
+    label: t('menu.listings', 'Listings'),
     icon: <UnorderedListOutlined style={{ fontSize: '16px' }} />,
   },
   {
     key: '/features',
-    label: t('menu.features'),
+    label: t('menu.features', 'Features'),
     icon: <TagsOutlined style={{ fontSize: '16px' }} />,
   },
   ...(isAdmin ? [{
     key: 'user-management',
-    label: t('menu.userManagement'),
-    icon: <TeamOutlined style={{ fontSize: '16px' }} />,
+    label: t('menu.userManagement', 'System Management'),
+    icon: <SettingOutlined style={{ fontSize: '16px' }} />,
     requiredRole: 'admin',
     children: [
       {
         key: '/users',
-        label: t('menu.users'),
+        label: t('menu.users', 'Users'),
         icon: <UserOutlined style={{ fontSize: '14px' }} />,
       },
       {
         key: '/roles',
-        label: t('menu.roles'),
+        label: t('menu.roles', 'Roles & Permissions'),
         icon: <UserSwitchOutlined style={{ fontSize: '14px' }} />,
+      },
+      {
+        key: '/data-generator',
+        label: t('menu.dataGenerator', 'Data Generator'),
+        icon: <DatabaseOutlined style={{ fontSize: '14px' }} />,
       },
     ]
   }] : [] as MenuItem[])

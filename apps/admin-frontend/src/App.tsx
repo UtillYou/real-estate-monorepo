@@ -1,9 +1,9 @@
-import React, { Suspense, useEffect } from 'react';
+import React, { Suspense } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Refine } from '@refinedev/core';
-import { RefineThemes, notificationProvider, ErrorComponent } from '@refinedev/antd';
+import { RefineThemes, notificationProvider } from '@refinedev/antd';
 import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
-import { ConfigProvider, Spin, App as AntdApp, notification } from 'antd';
+import { ConfigProvider, Spin, App as AntdApp } from 'antd';
 import enUS from 'antd/locale/en_US';
 import zhCN from 'antd/locale/zh_CN';
 import { AuthProvider, useAuth } from './AuthContext';
@@ -16,6 +16,7 @@ import UsersPage from './pages/UsersPage';
 import FeaturesPage from './pages/FeaturesPage';
 import DashboardPage from './pages/DashboardPage';
 import RolesPage from './pages/RolesPage';
+import DataGeneratorPage from './pages/DataGeneratorPage';
 import { I18nextProvider, useTranslation } from 'react-i18next';
 import i18n from './i18n/i18n';
 import '@refinedev/antd/dist/reset.css';
@@ -212,6 +213,19 @@ const AppContent: React.FC = () => {
                             element={
                               <SidebarLayout>
                                 <RolesPage />
+                              </SidebarLayout>
+                            }
+                          />
+                        }
+                      />
+                      
+                      <Route
+                        path="/data-generator"
+                        element={
+                          <PrivateRoute
+                            element={
+                              <SidebarLayout>
+                                <DataGeneratorPage />
                               </SidebarLayout>
                             }
                           />

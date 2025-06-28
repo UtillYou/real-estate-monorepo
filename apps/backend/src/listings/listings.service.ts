@@ -77,4 +77,30 @@ export class ListingsService {
     const result = await this.listingsRepository.delete(id);
     if (result.affected === 0) throw new NotFoundException('Listing not found');
   }
+
+  async removeAll(): Promise<void> {
+    const queryRunner = this.listingsRepository.manager.connection.createQueryRunner();
+    
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
+    
+    try {
+      console.log('Starting to delete all listings...');
+      
+      // First, delete all entries from the join table
+      await queryRunner.query('DELETE FROM listing_features');
+      
+      // Then delete all listings
+      await queryRunner.query('DELETE FROM listings');
+      
+      await queryRunner.commitTransaction();
+      console.log('Successfully deleted all listings');
+    } catch (error) {
+      await queryRunner.rollbackTransaction();
+      console.error('Error in removeAll:', error);
+      throw error;
+    } finally {
+      await queryRunner.release();
+    }
+  }
 }

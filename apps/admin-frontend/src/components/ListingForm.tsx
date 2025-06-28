@@ -10,8 +10,6 @@ import {
   Row, 
   Col, 
   Checkbox,
-  Typography,
-  Divider
 } from 'antd';
 import { HomeOutlined } from '@ant-design/icons';
 import { useTranslation } from 'react-i18next';
@@ -21,7 +19,6 @@ import { Listing, CreateListingDto, UpdateListingDto } from '../api/listings';
 import { Feature, getFeatures } from '../api/features';
 
 const { Option } = Select;
-const { Title } = Typography;
 
 interface Props {
   initialValues?: Listing | null;
@@ -107,8 +104,6 @@ const ListingForm: React.FC<Props> = ({ initialValues, onSubmit, loading, onCanc
 
   const handleFinish = async (values: any) => {
     try {
-      // Get the current form values
-      const currentFormValues = await form.validateFields();
       
       // Use the selectedFeatureIds as the source of truth
       const finalFeatureIds = [...selectedFeatureIds];
@@ -145,18 +140,6 @@ const ListingForm: React.FC<Props> = ({ initialValues, onSubmit, loading, onCanc
     }
   };
 
-  // No need for toggleFeature anymore as we're using Checkbox.Group
-
-  const formItemLayout = {
-    labelCol: { span: 8 },
-    wrapperCol: { span: 16 },
-  };
-
-  const tailFormItemLayout = {
-    wrapperCol: { offset: 8, span: 16 },
-  };
-  
-  const getFieldLabel = (key: string) => t(`form.${key}`);
 
   return (
     <div style={{ 
@@ -280,7 +263,7 @@ const ListingForm: React.FC<Props> = ({ initialValues, onSubmit, loading, onCanc
                     min={1800}
                     max={new Date().getFullYear() + 1}
                     style={{ width: '100%' }}
-                    placeholder={t('form.year')}
+                    placeholder={t('form.year', 'Year')}
                   />
                 </Form.Item>
               </Col>
@@ -412,12 +395,12 @@ const ListingForm: React.FC<Props> = ({ initialValues, onSubmit, loading, onCanc
           >
             <Form.Item
               name="isActive"
-              label={t('form.listingStatus')}
+              label={t('form.isActive')}
               valuePropName="checked"
             >
               <Switch
-                checkedChildren={t('common.active')}
-                unCheckedChildren={t('common.inactive')}
+                checkedChildren={t('form.active')}
+                unCheckedChildren={t('form.inactive')}
                 defaultChecked
               />
             </Form.Item>
@@ -438,7 +421,7 @@ const ListingForm: React.FC<Props> = ({ initialValues, onSubmit, loading, onCanc
           gap: '8px'
         }}>
           <Button type="primary" htmlType="submit" loading={loading}>
-            {initialValues ? t('common.update') : t('common.create')} {t('listings.listing')}
+            {initialValues ? t('listings.editListing') : t('listings.createListing')}
           </Button>
           <Button onClick={onCancel} disabled={loading}>
             {t('common.cancel')}

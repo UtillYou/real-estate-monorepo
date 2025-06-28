@@ -1,10 +1,15 @@
-import { Controller, Get, Post, Body, Param, Patch, Delete, Query, ParseArrayPipe, DefaultValuePipe, ParseIntPipe } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Patch, Delete, Query, ParseIntPipe, UseGuards } from '@nestjs/common';
+import { ApiTags, ApiOperation, ApiQuery, ApiResponse } from '@nestjs/swagger';
+import { JwtStrategy } from '../auth/jwt.strategy';
+import { RolesGuard } from '../auth/roles.guard';
+import { Role } from '../auth/roles.decorator';
 import { ListingsService } from './listings.service';
 import { CreateListingDto, UpdateListingDto } from './listing.dto';
-import { ApiTags, ApiOperation, ApiQuery } from '@nestjs/swagger';
 
 @ApiTags('listings')
 @Controller('listings')
+@UseGuards(JwtStrategy, RolesGuard)
+@Role('admin')
 export class ListingsController {
   constructor(private readonly listingsService: ListingsService) {}
 
@@ -46,6 +51,16 @@ export class ListingsController {
     @Body() updateListingDto: UpdateListingDto,
   ) {
     return this.listingsService.update(id, updateListingDto);
+  }
+
+  @Delete('all')
+  @ApiOperation({ summary: 'Delete all listings' })
+  @ApiResponse({ status: 200, description: 'Successfully deleted all listings' })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
+  @ApiResponse({ status: 403, description: 'Forbidden - Admin only' })
+  async removeAll() {
+    await this.listingsService.removeAll();
+    return { message: 'All listings have been deleted successfully' };
   }
 
   @Delete(':id')
