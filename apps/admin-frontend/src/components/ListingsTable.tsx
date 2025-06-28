@@ -1,22 +1,23 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { 
-  Table, 
-  Button, 
-  Space, 
-  Popconfirm, 
-  message, 
-  Tag, 
+import {
+  Table,
+  Button,
+  Space,
+  Popconfirm,
+  message,
+  Tag,
   Tooltip,
-  Input 
+  Input,
+  Modal
 } from 'antd';
-import { 
-  EditOutlined, 
-  DeleteOutlined, 
+import {
+  EditOutlined,
+  DeleteOutlined,
   ReloadOutlined,
   SearchOutlined
 } from '@ant-design/icons';
-import { Listing } from '../api/listings';
+import { Listing, deleteListing } from '../api/listings';
 import { useQueryClient } from '@tanstack/react-query';
 
 type PropertyType = 'APARTMENT' | 'HOUSE' | 'CONDO' | 'TOWNHOUSE' | 'LAND' | 'COMMERCIAL' | 'OTHER';
@@ -29,17 +30,17 @@ interface Props {
   onSearch?: (value: string) => void;
 }
 
-const ListingsTable: React.FC<Props> = ({ 
-  data = [], 
-  loading, 
-  onEdit, 
-  searchValue, 
-  onSearch 
+const ListingsTable: React.FC<Props> = ({
+  data = [],
+  loading,
+  onEdit,
+  searchValue,
+  onSearch
 }) => {
   const { t } = useTranslation();
   const queryClient = useQueryClient();
   const [localSearchValue, setLocalSearchValue] = useState('');
-  
+
   // Define property type filters
   const propertyTypeFilters = useMemo(() => [
     { text: t('listings.apartment', 'Apartment'), value: 'APARTMENT' },
@@ -74,20 +75,41 @@ const ListingsTable: React.FC<Props> = ({
       onSearch('');
     }
   };
-  
+
+  const [deletingId, setDeletingId] = useState<number | null>(null);
+
   const handleDelete = async (id: number) => {
     try {
-      // In a real app, you would call your API here
-      // await deleteListing(id);
-      
-      // For now, just simulate a successful deletion
-      message.success(t('listings.deleted', 'Listing deleted successfully'));
-      
-      // Invalidate the listings query to refetch data
-      queryClient.invalidateQueries({ queryKey: ['listings'] });
+      Modal.confirm({
+        title: t('common.confirmDelete', 'Confirm Delete'),
+        content: t('listings.confirmDelete', 'Are you sure you want to delete this listing?'),
+        okText: t('common.yes', 'Yes'),
+        okType: 'danger',
+        cancelText: t('common.no', 'No'),
+        onOk: async () => {
+          try {
+            setDeletingId(id);
+            await deleteListing(id);
+            message.success(t('listings.deleted', 'Listing deleted successfully'));
+            // Invalidate the listings query to refetch data
+            await queryClient.invalidateQueries({ queryKey: ['listings'] });
+          } catch (error: any) {
+            console.error('Error deleting listing:', error);
+            message.error(
+              error?.response?.data?.message ||
+              t('listings.deleteFailed', 'Failed to delete listing')
+            );
+          } finally {
+            setDeletingId(null);
+          }
+        },
+        onCancel: () => {
+          setDeletingId(null);
+        }
+      });
     } catch (error) {
-      console.error('Error deleting listing:', error);
-      message.error(t('common.deleteFailed', 'Failed to delete listing'));
+      console.error('Error showing delete confirmation:', error);
+      setDeletingId(null);
     }
   };
 
@@ -100,8 +122,8 @@ const ListingsTable: React.FC<Props> = ({
         <Space direction="vertical" size={0}>
           <span>{record.title}</span>
           <small className="text-muted">
-            {record.bedrooms} {t('listings.bed', 'bd')} • 
-            {record.bathrooms} {t('listings.bath', 'ba')} • 
+            {record.bedrooms} {t('listings.bed', 'bd')} •
+            {record.bathrooms} {t('listings.bath', 'ba')} •
             {record.squareFeet} {t('listings.sqft', 'sqft')}
           </small>
         </Space>
@@ -119,7 +141,7 @@ const ListingsTable: React.FC<Props> = ({
       dataIndex: 'propertyType',
       key: 'type',
       filters: propertyTypeFilters,
-      onFilter: (value: any, record: Listing) => 
+      onFilter: (value: any, record: Listing) =>
         record.propertyType === value,
       render: (type: PropertyType) => (
         <Tag color="blue">
@@ -145,7 +167,7 @@ const ListingsTable: React.FC<Props> = ({
       key: 'status',
       render: (isActive: boolean) => (
         <Tag color={isActive ? 'green' : 'red'}>
-          {isActive 
+          {isActive
             ? t('listings.active', 'Active')
             : t('listings.inactive', 'Inactive')}
         </Tag>
@@ -154,7 +176,7 @@ const ListingsTable: React.FC<Props> = ({
         { text: t('listings.active', 'Active'), value: true },
         { text: t('listings.inactive', 'Inactive'), value: false },
       ],
-      onFilter: (value: any, record: Listing) => 
+      onFilter: (value: any, record: Listing) =>
         record.isActive === value,
     },
     {
@@ -180,14 +202,14 @@ const ListingsTable: React.FC<Props> = ({
             icon={<EditOutlined />}
             onClick={() => onEdit(record)}
           />
-          <Popconfirm
-            title={t('common.confirmDelete', 'Are you sure you want to delete this listing?')}
-            onConfirm={() => handleDelete(record.id)}
-            okText={t('common.yes', 'Yes')}
-            cancelText={t('common.no', 'No')}
-          >
-            <Button type="text" danger icon={<DeleteOutlined />} />
-          </Popconfirm>
+          <Button
+            type="text"
+            danger
+            onClick={() => handleDelete(record.id)}
+            disabled={!record.isActive || deletingId === record.id}
+            loading={deletingId === record.id}
+            icon={<DeleteOutlined />}
+          />
         </Space>
       ),
     },
@@ -206,33 +228,34 @@ const ListingsTable: React.FC<Props> = ({
             style={{ flex: 1, maxWidth: '400px' }}
             allowClear
           />
-          <Button 
-            type="primary" 
-            icon={<SearchOutlined />} 
+          <Button
+            type="primary"
+            icon={<SearchOutlined />}
             onClick={handleSearch}
             loading={loading}
           >
             {t('common.search', 'Search')}
           </Button>
-          <Button 
-            icon={<ReloadOutlined />} 
+          <Button
+            icon={<ReloadOutlined />}
             onClick={handleReset}
             disabled={loading}
+            style={{ display: onSearch ? 'inline-flex' : 'none' }}
           >
             {t('common.reset', 'Reset')}
           </Button>
         </div>
       </div>
-      
+
       <Table
         dataSource={data}
         rowKey="id"
         loading={loading}
         columns={columns}
-        pagination={{ 
+        pagination={{
           pageSize: 10,
           showSizeChanger: true,
-          showTotal: (total: number, range: [number, number]) => 
+          showTotal: (total: number, range: [number, number]) =>
             t('listings.showingProperties', 'Showing {{from}}-{{to}} of {{total}} properties', {
               from: range[0] + 1,
               to: range[1],

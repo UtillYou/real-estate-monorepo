@@ -74,8 +74,36 @@ export class ListingsService {
   }
 
   async remove(id: number): Promise<void> {
-    const result = await this.listingsRepository.delete(id);
-    if (result.affected === 0) throw new NotFoundException('Listing not found');
+    const queryRunner = this.listingsRepository.manager.connection.createQueryRunner();
+    
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
+    
+    try {
+      // First, load the listing with features to ensure it exists
+      const listing = await queryRunner.manager.findOne(Listing, {
+        where: { id },
+        relations: ['features']
+      });
+      
+      if (!listing) {
+        throw new NotFoundException('Listing not found');
+      }
+      
+      // Remove all features from the listing (this handles the join table)
+      listing.features = [];
+      await queryRunner.manager.save(listing);
+      
+      // Then delete the listing
+      await queryRunner.manager.remove(listing);
+      
+      await queryRunner.commitTransaction();
+    } catch (error) {
+      await queryRunner.rollbackTransaction();
+      throw error;
+    } finally {
+      await queryRunner.release();
+    }
   }
 
   async removeAll(): Promise<void> {

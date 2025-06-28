@@ -88,7 +88,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
   const uploadButton = (
     <button style={{ border: 0, background: 'none' }} type="button">
       <PlusOutlined />
-      <div style={{ marginTop: 8 }}>Upload</div>
+      <div style={{ marginTop: 8 }}>{t('common.upload', 'Upload')}</div>
     </button>
   );
 
@@ -103,10 +103,6 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
       accept="image/*"
       name="file"
       withCredentials
-      showUploadList={{
-        showRemoveIcon: true,
-        showPreviewIcon: true,
-      }}
       beforeUpload={(file: RcFile) => {
         const isImage = file.type.startsWith('image/');
         if (!isImage) {

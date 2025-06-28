@@ -53,6 +53,9 @@
     "roles": "角色与权限"
   },
   "listings": {
+    "confirmDelete": "确定要删除此房源吗？",
+    "deleted": "房源删除成功",
+    "deleteFailed": "删除房源失败",
     "title": "房源",
     "createListing": "创建房源",
     "editListing": "编辑房源",

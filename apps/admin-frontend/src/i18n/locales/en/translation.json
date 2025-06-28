@@ -51,6 +51,9 @@
     "dataGenerator": "Data Generator"
   },
   "listings": {
+    "confirmDelete": "Are you sure you want to delete this listing?",
+    "deleted": "Listing deleted successfully",
+    "deleteFailed": "Failed to delete listing",
     "title": "Listings",
     "createListing": "Create Listing",
     "editListing": "Edit Listing",
