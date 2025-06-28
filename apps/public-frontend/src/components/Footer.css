@@ -1,0 +1,163 @@
+.footer {
+  background: #2c3e50;
+  color: #fff;
+  padding: 64px 0 0 !important;
+  margin-top: 64px;
+}
+
+.footer-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.footer-section {
+  margin-bottom: 24px;
+}
+
+.footer-logo {
+  display: flex;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.footer-logo-text {
+  font-size: 20px;
+  font-weight: 600;
+  color: #fff;
+  margin-left: 8px;
+}
+
+.footer-description {
+  color: #b4b4b4;
+  margin-bottom: 16px;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.footer-social {
+  display: flex;
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.footer-social a {
+  color: #fff;
+  font-size: 18px;
+  transition: var(--transition);
+}
+
+.footer-social a:hover {
+  color: var(--primary-color);
+}
+
+.footer-heading {
+  color: #fff;
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 16px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.footer-links {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.footer-links li {
+  margin-bottom: 12px;
+}
+
+.footer-links a {
+  color: #b4b4b4;
+  transition: var(--transition);
+  font-size: 14px;
+}
+
+.footer-links a:hover {
+  color: #fff;
+  padding-left: 4px;
+}
+
+.contact-info {
+  color: #b4b4b4;
+  font-size: 14px;
+  line-height: 1.8;
+}
+
+.contact-item {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 12px;
+}
+
+.contact-icon {
+  margin-right: 12px;
+  color: var(--primary-color);
+  font-size: 16px;
+  margin-top: 4px;
+}
+
+.footer-bottom {
+  padding: 24px 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  margin-top: 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.footer-legal {
+  display: flex;
+  gap: 16px;
+}
+
+.footer-legal a {
+  color: #b4b4b4;
+  font-size: 13px;
+  transition: var(--transition);
+}
+
+.footer-legal a:hover {
+  color: #fff;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+  .footer {
+    text-align: center;
+    padding: 48px 0 0 !important;
+  }
+  
+  .footer-logo {
+    justify-content: center;
+  }
+  
+  .footer-social {
+    justify-content: center;
+  }
+  
+  .footer-bottom {
+    flex-direction: column;
+    gap: 16px;
+    text-align: center;
+  }
+  
+  .footer-legal {
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+}
+
+@media (max-width: 576px) {
+  .footer {
+    padding: 32px 0 0 !important;
+  }
+  
+  .footer-section {
+    margin-bottom: 32px;
+  }
+}

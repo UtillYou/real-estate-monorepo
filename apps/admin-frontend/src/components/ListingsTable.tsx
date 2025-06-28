@@ -215,9 +215,13 @@ const ListingsTable: React.FC<Props> = ({
     },
   ];
 
+
+
+
+
   return (
-    <div>
-      <div style={{ marginBottom: 16 }}>
+    <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+      <div style={{ marginBottom: 16, flexShrink: 0 }}>
         <div style={{ display: 'flex', gap: '8px' }}>
           <Input
             placeholder={t('listings.searchPlaceholder', 'Search by title or address...')}
@@ -247,14 +251,17 @@ const ListingsTable: React.FC<Props> = ({
         </div>
       </div>
 
+
       <Table
         dataSource={data}
         rowKey="id"
         loading={loading}
         columns={columns}
+        scroll={{ y: 'calc(100vh - 300px)' }}
         pagination={{
           pageSize: 10,
           showSizeChanger: true,
+          style: { marginBottom: 0 },
           showTotal: (total: number, range: [number, number]) =>
             t('listings.showingProperties', 'Showing {{from}}-{{to}} of {{total}} properties', {
               from: range[0] + 1,
@@ -264,6 +271,7 @@ const ListingsTable: React.FC<Props> = ({
         }}
         rowClassName={(record: Listing) => record.isActive ? 'active-row' : 'inactive-row'}
       />
+
     </div>
   );
 };

@@ -20,22 +20,48 @@ export class ListingsController {
   }
 
   @Get()
-  @ApiOperation({ summary: 'Get all listings with optional search' })
+  @ApiOperation({ summary: 'Get all listings with optional search, sorting and pagination' })
   @ApiQuery({ name: 'search', required: false })
   @ApiQuery({
     name: 'featureIds',
     required: false,
     description: 'Comma-separated list of feature IDs to filter by',
   })
+  @ApiQuery({
+    name: 'sortBy',
+    required: false,
+    enum: ['newest', 'price_asc', 'price_desc'],
+    description: 'Sort order',
+  })
+  @ApiQuery({
+    name: 'limit',
+    required: false,
+    description: 'Limit number of results',
+    type: Number,
+  })
   async findAll(
     @Query('search') search?: string,
     @Query('featureIds') featureIds?: string,
+    @Query('sortBy') sortBy?: 'newest' | 'price_asc' | 'price_desc',
+    @Query('limit', new ParseIntPipe({ optional: true })) limit?: number,
   ) {
     const parsedFeatureIds = featureIds
       ? featureIds.split(',').map(id => parseInt(id.trim(), 10))
       : undefined;
     
-    return this.listingsService.findAll(search, parsedFeatureIds);
+    return this.listingsService.findAll({
+      search,
+      featureIds: parsedFeatureIds,
+      sortBy,
+      limit,
+    });
+  }
+
+  @Get('featured')
+  @ApiOperation({ summary: 'Get featured listings (top 8 listings with features)' })
+  @ApiResponse({ status: 200, description: 'Returns the featured listings' })
+  async findFeatured() {
+    return this.listingsService.findFeatured();
   }
 
   @Get(':id')

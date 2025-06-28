@@ -141,6 +141,7 @@ const FeaturesTable: React.FC<FeaturesTableProps> = ({
         dataSource={filteredData}
         rowKey="id"
         loading={loading}
+        scroll={{ y: 'calc(100vh - 300px)' }}
         pagination={{
           pageSize: 10,
           showSizeChanger: false,

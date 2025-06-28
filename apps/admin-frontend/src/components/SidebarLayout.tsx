@@ -55,8 +55,8 @@ const getMenuItems = (t: any, isAdmin: boolean): MenuItem[] => [
     icon: <TagsOutlined style={{ fontSize: '16px' }} />,
   },
   ...(isAdmin ? [{
-    key: 'user-management',
-    label: t('menu.userManagement', 'System Management'),
+    key: 'system-management',
+    label: t('menu.systemManagement', 'System Management'),
     icon: <SettingOutlined style={{ fontSize: '16px' }} />,
     requiredRole: 'admin',
     children: [

@@ -6,6 +6,13 @@ import { CreateListingDto, UpdateListingDto } from './listing.dto';
 import { FeaturesService } from '../features/features.service';
 import { Feature } from '../features/feature.entity';
 
+type FindAllOptions = {
+  search?: string;
+  featureIds?: number[];
+  sortBy?: 'newest' | 'price_asc' | 'price_desc';
+  limit?: number;
+};
+
 @Injectable()
 export class ListingsService {
   constructor(
@@ -26,7 +33,12 @@ export class ListingsService {
     return this.listingsRepository.save(listing);
   }
 
-  async findAll(search?: string, featureIds?: number[]): Promise<Listing[]> {
+  async findAll({
+    search,
+    featureIds,
+    sortBy = 'newest',
+    limit
+  }: FindAllOptions = {}): Promise<Listing[]> {
     const query = this.listingsRepository
       .createQueryBuilder('listing')
       .leftJoinAndSelect('listing.features', 'features');
@@ -42,6 +54,25 @@ export class ListingsService {
     if (featureIds && featureIds.length > 0) {
       query.andWhere('features.id IN (:...featureIds)', { featureIds });
     }
+
+    // Apply sorting
+    switch (sortBy) {
+      case 'price_asc':
+        query.orderBy('listing.price', 'ASC');
+        break;
+      case 'price_desc':
+        query.orderBy('listing.price', 'DESC');
+        break;
+      case 'newest':
+      default:
+        query.orderBy('listing.createdAt', 'DESC');
+        break;
+    }
+
+    // Apply limit if provided
+    if (limit) {
+      query.take(limit);
+    }
     
     return query.getMany();
   }
@@ -53,6 +84,17 @@ export class ListingsService {
     });
     if (!listing) throw new NotFoundException('Listing not found');
     return listing;
+  }
+
+  async findFeatured(): Promise<Listing[]> {
+    return this.listingsRepository
+      .createQueryBuilder('listing')
+      .leftJoinAndSelect('listing.features', 'features')
+      .where('features.id IS NOT NULL')
+      .andWhere('listing.isActive = :isActive', { isActive: true })
+      .orderBy('listing.createdAt', 'DESC')
+      .take(8)
+      .getMany();
   }
 
   async update(id: number, updateDto: UpdateListingDto): Promise<Listing> {

@@ -22,7 +22,13 @@ const ListingsList: React.FC = () => {
         <Col xs={24} sm={12} md={8} lg={6} key={listing.id}>
           <Card
             title={listing.title}
-            cover={listing.imageUrl ? <img src={listing.imageUrl} alt={listing.title} style={{ height: 200, objectFit: 'cover' }} /> : null}
+            cover={listing.images && listing.images.length > 0 ? (
+              <img 
+                src={listing.images?.[0]?.url} 
+                alt={listing.title} 
+                style={{ height: 200, objectFit: 'cover' }} 
+              />
+            ) : null}
           >
             <p><b>Price:</b> ${listing.price}</p>
             <p><b>Address:</b> {listing.address}</p>

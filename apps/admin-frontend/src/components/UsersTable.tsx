@@ -134,6 +134,7 @@ const UsersTable: React.FC<Props> = ({ data, loading, onEdit }) => {
       loading={loading}
       rowKey="id"
       pagination={{ pageSize: 10 }}
+      scroll={{ y: 'calc(100vh - 300px)' }}
     />
   );
 };

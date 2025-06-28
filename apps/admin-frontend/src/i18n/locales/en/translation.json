@@ -45,7 +45,7 @@
     "dashboard": "Dashboard",
     "listings": "Listings",
     "features": "Features",
-    "userManagement": "System Management",
+    "systemManagement": "System Management",
     "users": "Users",
     "roles": "Roles & Permissions",
     "dataGenerator": "Data Generator"
