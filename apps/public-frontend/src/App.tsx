@@ -6,6 +6,7 @@ import Navbar from './components/Navbar';
 import HomePage from './pages/HomePage';
 import PropertyDetails from './pages/PropertyDetails';
 import PropertiesList from './pages/PropertiesList';
+import SearchPage from './pages/SearchPage';
 import Footer from './components/Footer';
 import './App.css';
 
@@ -49,8 +50,9 @@ function App() {
             <Content className="app-content">
               <Routes>
                 <Route path="/" element={<HomePage />} />
+                <Route path="/search" element={<SearchPage />} />
                 <Route path="/properties" element={<PropertiesList />} />
-                <Route path="/property/:id" element={<PropertyDetails />} />
+                <Route path="/properties/:id" element={<PropertyDetails />} />
                 {/* Add more routes as needed */}
               </Routes>
             </Content>

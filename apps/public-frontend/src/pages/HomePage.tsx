@@ -1,24 +1,17 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Row, Col, Card, Input, Button, Select, Typography, Space, Divider, Tag, Spin, Empty } from 'antd';
-import { SearchOutlined, HomeOutlined, FilterOutlined } from '@ant-design/icons';
+import { Row, Col, Card, Input, Button, Typography, Spin, Tag, Empty } from 'antd';
+import { SearchOutlined, HomeOutlined } from '@ant-design/icons';
 import { fetchFeaturedListings, fetchLatestListings, Listing } from '../api/listings';
 import { useQuery } from '@tanstack/react-query';
 import { PropertyType } from '../types';
 
 const { Title, Text } = Typography;
 const { Search } = Input;
-const { Option } = Select;
 
 const HomePage: React.FC = () => {
-  const [searchQuery, setSearchQuery] = useState('');
-  const [filters, setFilters] = useState({
-    minPrice: '',
-    maxPrice: '',
-    bedrooms: '',
-    propertyType: [] as string[],
-  });
   const navigate = useNavigate();
+  const [searchQuery, setSearchQuery] = useState('');
 
   // Fetch featured listings
   const { data: featuredListings = [], isLoading: isLoadingFeatured } = useQuery({
@@ -39,12 +32,16 @@ const HomePage: React.FC = () => {
   });
 
   const handleSearch = () => {
-    // TODO: Implement search with filters
-    console.log('Searching with:', { searchQuery, ...filters });
+    if (!searchQuery.trim()) return;
+    
+    // Navigate to search page with query parameters
+    const params = new URLSearchParams();
+    params.set('q', searchQuery.trim());
+    navigate(`/search?${params.toString()}`);
   };
 
   const handlePropertyClick = (id: number) => {
-    navigate(`/property/${id}`);
+    navigate(`/properties/${id}`);
   };
 
   return (
@@ -71,57 +68,8 @@ const HomePage: React.FC = () => {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             onSearch={handleSearch}
-            style={{ marginBottom: 16 }}
+            style={{ width: '100%' }}
           />
-          <div style={{ display: 'flex', gap: 12, justifyContent: 'center' }}>
-            <Select
-              placeholder="Min Price"
-              style={{ width: 140 }}
-              value={filters.minPrice || undefined}
-              onChange={(value) => setFilters({...filters, minPrice: value})}
-              allowClear
-            >
-              <Option value="100000">$100,000</Option>
-              <Option value="200000">$200,000</Option>
-              <Option value="300000">$300,000</Option>
-              <Option value="500000">$500,000</Option>
-              <Option value="750000">$750,000</Option>
-              <Option value="1000000">$1,000,000+</Option>
-            </Select>
-            <Select
-              placeholder="Max Price"
-              style={{ width: 140 }}
-              value={filters.maxPrice || undefined}
-              onChange={(value) => setFilters({...filters, maxPrice: value})}
-              allowClear
-            >
-              <Option value="200000">$200,000</Option>
-              <Option value="300000">$300,000</Option>
-              <Option value="500000">$500,000</Option>
-              <Option value="750000">$750,000</Option>
-              <Option value="1000000">$1,000,000</Option>
-              <Option value="2000000">$2,000,000+</Option>
-            </Select>
-            <Select
-              placeholder="Bedrooms"
-              style={{ width: 120 }}
-              value={filters.bedrooms || undefined}
-              onChange={(value) => setFilters({...filters, bedrooms: value})}
-              allowClear
-            >
-              <Option value="1">1+ Bed</Option>
-              <Option value="2">2+ Beds</Option>
-              <Option value="3">3+ Beds</Option>
-              <Option value="4">4+ Beds</Option>
-              <Option value="5">5+ Beds</Option>
-            </Select>
-            <Button 
-              icon={<FilterOutlined />} 
-              onClick={() => console.log('More filters')}
-            >
-              More Filters
-            </Button>
-          </div>
         </div>
       </div>
 
@@ -303,7 +251,6 @@ const HomePage: React.FC = () => {
                   flexDirection: 'column',
                   alignItems: 'center',
                 }}
-                onClick={() => setFilters({...filters, propertyType: [type]})}
               >
                 <div style={{ fontSize: 32, marginBottom: 12, color: '#1890ff' }}>{icon}</div>
                 <Text strong>{label}</Text>

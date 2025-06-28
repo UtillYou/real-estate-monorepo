@@ -8,7 +8,19 @@ import { Feature } from '../features/feature.entity';
 
 type FindAllOptions = {
   search?: string;
+  query?: string;
   featureIds?: number[];
+  propertyType?: string[];
+  minPrice?: number;
+  maxPrice?: number;
+  bedrooms?: number;
+  minBathrooms?: number;
+  minArea?: number;
+  maxArea?: number;
+  hasGarage?: boolean | string;
+  hasParking?: boolean | string;
+  hasAC?: boolean | string;
+  hasPool?: boolean | string;
   sortBy?: 'newest' | 'price_asc' | 'price_desc';
   limit?: number;
 };
@@ -35,46 +47,109 @@ export class ListingsService {
 
   async findAll({
     search,
+    query,
     featureIds,
+    propertyType,
+    minPrice,
+    maxPrice,
+    bedrooms,
+    minBathrooms = 1,
+    minArea = 0,
+    maxArea = 10000,
+    hasGarage,
+    hasParking,
+    hasAC,
+    hasPool,
     sortBy = 'newest',
     limit
   }: FindAllOptions = {}): Promise<Listing[]> {
-    const query = this.listingsRepository
+    const queryBuilder = this.listingsRepository
       .createQueryBuilder('listing')
       .leftJoinAndSelect('listing.features', 'features');
     
-    if (search) {
-      const searchTerm = `%${search.toLowerCase()}`;
-      query.andWhere(
-        '(LOWER(listing.title) LIKE :search OR LOWER(listing.address) LIKE :search)',
-        { search: searchTerm }
+    // Handle search query (from search bar)
+    const searchTerm = search || query;
+    if (searchTerm) {
+      const searchPattern = `%${searchTerm.toLowerCase()}%`;
+      queryBuilder.andWhere(
+        '(LOWER(listing.title) LIKE :search OR LOWER(listing.address) LIKE :search OR LOWER(listing.description) LIKE :search)',
+        { search: searchPattern }
       );
     }
     
+    // Handle features filter
     if (featureIds && featureIds.length > 0) {
-      query.andWhere('features.id IN (:...featureIds)', { featureIds });
+      queryBuilder.andWhere('features.id IN (:...featureIds)', { featureIds });
     }
+    
+    // Handle property type filter
+    if (propertyType && propertyType.length > 0) {
+      queryBuilder.andWhere('listing.propertyType IN (:...propertyType)', { propertyType });
+    }
+    
+    // Handle price range
+    if (minPrice !== undefined) {
+      queryBuilder.andWhere('listing.price >= :minPrice', { minPrice });
+    }
+    if (maxPrice !== undefined) {
+      queryBuilder.andWhere('listing.price <= :maxPrice', { maxPrice });
+    }
+    
+    // Handle bedrooms
+    if (bedrooms !== undefined) {
+      queryBuilder.andWhere('listing.bedrooms >= :bedrooms', { bedrooms });
+    }
+    
+    // Handle bathrooms
+    if (minBathrooms !== undefined) {
+      queryBuilder.andWhere('listing.bathrooms >= :minBathrooms', { minBathrooms });
+    }
+    
+    // Handle area range
+    if (minArea !== undefined) {
+      queryBuilder.andWhere('listing.area >= :minArea', { minArea });
+    }
+    if (maxArea !== undefined) {
+      queryBuilder.andWhere('listing.area <= :maxArea', { maxArea });
+    }
+    
+    // Handle boolean filters
+    const booleanFilters = [
+      { field: 'hasGarage', value: hasGarage },
+      { field: 'hasParking', value: hasParking },
+      { field: 'hasAC', value: hasAC },
+      { field: 'hasPool', value: hasPool },
+    ];
+    
+    booleanFilters.forEach(({ field, value }) => {
+      if (value !== undefined) {
+        const boolValue = typeof value === 'string' ? value === 'true' : value;
+        if (boolValue) {
+          queryBuilder.andWhere(`listing.${field} = :${field}`, { [field]: true });
+        }
+      }
+    });
 
     // Apply sorting
     switch (sortBy) {
       case 'price_asc':
-        query.orderBy('listing.price', 'ASC');
+        queryBuilder.orderBy('listing.price', 'ASC');
         break;
       case 'price_desc':
-        query.orderBy('listing.price', 'DESC');
+        queryBuilder.orderBy('listing.price', 'DESC');
         break;
       case 'newest':
       default:
-        query.orderBy('listing.createdAt', 'DESC');
+        queryBuilder.orderBy('listing.createdAt', 'DESC');
         break;
     }
 
     // Apply limit if provided
     if (limit) {
-      query.take(limit);
+      queryBuilder.take(limit);
     }
     
-    return query.getMany();
+    return queryBuilder.getMany();
   }
 
   async findOne(id: number): Promise<Listing> {

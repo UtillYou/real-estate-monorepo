@@ -31,8 +31,27 @@ export interface SearchParams {
   sortBy?: 'price_asc' | 'price_desc' | 'newest' | 'oldest';
 }
 
-export const fetchListings = (params?: SearchParams) => 
-  axios.get<Listing[]>('/api/listings', { params });
+export interface SearchFilters extends SearchParams {
+  minBathrooms?: number;
+  minArea?: number;
+  maxArea?: number;
+  hasGarage?: boolean;
+  hasParking?: boolean;
+  hasAC?: boolean;
+  hasPool?: boolean;
+}
+
+export const fetchListings = (params?: SearchFilters) => 
+  axios.get<Listing[]>('/api/listings', { 
+    params: {
+      ...params,
+      // Convert boolean filters to strings that can be properly serialized
+      ...(params?.hasGarage !== undefined && { hasGarage: String(params.hasGarage) }),
+      ...(params?.hasParking !== undefined && { hasParking: String(params.hasParking) }),
+      ...(params?.hasAC !== undefined && { hasAC: String(params.hasAC) }),
+      ...(params?.hasPool !== undefined && { hasPool: String(params.hasPool) }),
+    } 
+  });
 
 export const fetchListing = (id: number) => 
   axios.get<Listing>(`/api/listings/${id}`);
