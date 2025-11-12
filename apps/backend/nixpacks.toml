@@ -2,10 +2,16 @@
 nixPkgs = ["nodejs-20_x"]
 
 [phases.install]
-cmds = ["npm install"]
+cmds = ["cd ../../ && npm install"]
 
 [phases.build]
-cmds = ["npm run build"]
+cmds = ["cd ../../ && npm run build"]
 
 [start]
-cmd = "npm run start:prod"
+cmd = "cd apps/backend && node dist/main"
+
+[build.environment]
+NODE_ENV = "production"
+
+[build.args]
+NODE_ENV = { default = "production" }
