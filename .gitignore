@@ -40,8 +40,8 @@ apps/backend/uploads/
 *.sqlite3
 
 # Environment variables
-.env*
-!.env.example
+# .env*
+# !.env.example
 
 # Build output
 .next/

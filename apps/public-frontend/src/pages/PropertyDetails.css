@@ -73,8 +73,8 @@
 .image-navigation button {
   background: rgba(255, 255, 255, 0.8);
   border: none;
-  width: 40px;
-  height: 40px;
+  width: 40px !important;
+  height: 40px !important;
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -95,8 +95,8 @@
   background: rgba(0, 0, 0, 0.5) !important;
   color: white !important;
   border: none;
-  width: 40px;
-  height: 40px;
+  width: 40px !important;
+  height: 40px !important;
   border-radius: 50%;
   display: flex;
   align-items: center;
