@@ -43,7 +43,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
         setFileList(files);
       }
     } 
-  }, [value]);
+  }, [value,fileList]);
 
   const handleChange = (info: UploadChangeParam<UploadFile<UploadResponse>>) => {
     try {

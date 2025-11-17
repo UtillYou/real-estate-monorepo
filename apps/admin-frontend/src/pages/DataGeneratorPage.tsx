@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Card, Button, InputNumber, Form, Progress, Typography, notification, Modal, Divider } from 'antd';
 import { PlusOutlined, DeleteOutlined } from '@ant-design/icons';
 import { createListing, PropertyType, deleteAllListings } from '../api/listings';
-import { api } from '../api';
+
 
 const { Title, Text } = Typography;
 
@@ -15,17 +15,6 @@ const DataGeneratorPage: React.FC = () => {
   const [isDeleting, setIsDeleting] = useState(false);
 
   const propertyTypes: PropertyType[] = ['APARTMENT', 'HOUSE', 'CONDO', 'TOWNHOUSE'];
-  
-  // Property type to image search term mapping
-  const propertyTypeImageMap: Record<PropertyType, string[]> = {
-    'APARTMENT': ['modern+apartment', 'luxury+apartment', 'apartment+interior'],
-    'HOUSE': ['beautiful+house', 'modern+house', 'luxury+home'],
-    'CONDO': ['modern+condo', 'luxury+condo', 'condo+interior'],
-    'TOWNHOUSE': ['townhouse', 'townhome', 'rowhouse'],
-    'LAND': ['vacant+land', 'empty+lot', 'land+for+sale'],
-    'COMMERCIAL': ['commercial+property', 'office+building', 'retail+space'],
-    'OTHER': ['property', 'real+estate', 'home']
-  };
 
   const cities = [
     { city: 'New York', state: 'NY', zipCode: '10001' },
@@ -142,6 +131,7 @@ const DataGeneratorPage: React.FC = () => {
           const listingIndex = batch * batchSize + i;
           batchPromises.push(
             generateMockListing(listingIndex)
+              // eslint-disable-next-line no-loop-func
               .then(() => {
                 successfulCount++;
                 setGeneratedCount(successfulCount);

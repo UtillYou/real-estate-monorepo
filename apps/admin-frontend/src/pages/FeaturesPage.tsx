@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import { Modal, message, Button, Space } from 'antd';
+import {  message, Button, Space } from 'antd';
 import { PlusOutlined, ReloadOutlined } from '@ant-design/icons';
 import FeaturesTable from '../components/FeaturesTable';
 import FeatureForm from '../components/FeatureForm';
@@ -19,7 +19,7 @@ const FeaturesPage: React.FC = () => {
   const [searchValue, setSearchValue] = useState('');
   const [modalOpen, setModalOpen] = useState(false);
   const [editingFeature, setEditingFeature] = useState<Feature | undefined>(undefined);
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
 
   // Fetch features with search
   const { data: features = [], isLoading, refetch } = useQuery({

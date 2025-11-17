@@ -2,7 +2,7 @@ import React, { useState, useMemo } from 'react';
 import { Table, Space, Button, Popconfirm, Input } from 'antd';
 import { DeleteOutlined, EditOutlined, SearchOutlined, ReloadOutlined } from '@ant-design/icons';
 import { Feature } from '../api/features';
-import { debounce } from 'lodash';
+
 
 interface FeaturesTableProps {
   data: Feature[];

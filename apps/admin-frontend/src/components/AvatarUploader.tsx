@@ -6,7 +6,7 @@ const AvatarUploader: React.FC<{
   value?: string;
   onChange?: (url: string) => void;
 }> = ({ value, onChange }) => {
-  const [uploading, setUploading] = React.useState(false);
+  const [, setUploading] = React.useState(false);
 
   const handleChange = async (info: any) => {
     if (info.file.status === 'uploading') {

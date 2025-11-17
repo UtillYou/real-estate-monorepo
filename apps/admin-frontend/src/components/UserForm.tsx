@@ -1,6 +1,6 @@
 import React from 'react';
 import { Form, Input, Button, Switch, FormProps, Space, Upload, Avatar } from 'antd';
-import { UserOutlined, UploadOutlined } from '@ant-design/icons';
+import { UserOutlined } from '@ant-design/icons';
 import { User } from '../types';
 import { useTranslation } from 'react-i18next';
 
