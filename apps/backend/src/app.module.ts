@@ -31,7 +31,7 @@ console.log('wss env:', process.env);
       password: process.env.PGPASSWORD || 'postgres',
       database: process.env.PGDATABASE || 'realestate',
       entities: [User, Listing, RefreshToken, Feature],
-      synchronize: false, // set false in production
+      synchronize: true, // set false in production
       ssl: process.env.DATABASE_URL ? { rejectUnauthorized: false } : false,
     }),
     TypeOrmModule.forFeature([User, RefreshToken]),
