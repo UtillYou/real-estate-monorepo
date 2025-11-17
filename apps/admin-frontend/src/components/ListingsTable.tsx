@@ -43,13 +43,13 @@ const ListingsTable: React.FC<Props> = ({
 
   // Define property type filters
   const propertyTypeFilters = useMemo(() => [
-    { text: t('listings.apartment', 'Apartment'), value: 'APARTMENT' },
-    { text: t('listings.house', 'House'), value: 'HOUSE' },
-    { text: t('listings.condo', 'Condo'), value: 'CONDO' },
-    { text: t('listings.townhouse', 'Townhouse'), value: 'TOWNHOUSE' },
-    { text: t('listings.land', 'Land'), value: 'LAND' },
-    { text: t('listings.commercial', 'Commercial'), value: 'COMMERCIAL' },
-    { text: t('listings.other', 'Other'), value: 'OTHER' },
+    { text: t('listings.apartment', 'Apartment') as string, value: 'APARTMENT' },
+    { text: t('listings.house', 'House') as string, value: 'HOUSE' },
+    { text: t('listings.condo', 'Condo') as string, value: 'CONDO' },
+    { text: t('listings.townhouse', 'Townhouse') as string, value: 'TOWNHOUSE' },
+    { text: t('listings.land', 'Land') as string, value: 'LAND' },
+    { text: t('listings.commercial', 'Commercial') as string, value: 'COMMERCIAL' },
+    { text: t('listings.other', 'Other') as string, value: 'OTHER' },
   ], [t]);
 
   // Sync local search value with prop
