@@ -14,6 +14,8 @@ import { UsersModule } from './users/users.module';
 import { Feature } from './features/feature.entity';
 import { FeaturesModule } from './features/features.module';
 
+console.log('wss url:', process.env.DATABASE_URL);
+
 @Module({
   imports: [
     ServeStaticModule.forRoot({
