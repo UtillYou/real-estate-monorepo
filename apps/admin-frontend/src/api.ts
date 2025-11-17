@@ -2,7 +2,7 @@ import axios from 'axios';
 
 console.log('wss env:',process.env.RAILWAY_ENVIRONMENT_NAME,process.env)
 const api = axios.create({
-  baseURL: process.env.RAILWAY_ENVIRONMENT_NAME === 'production' 
+  baseURL: process.env.NODE_ENV === 'production' 
     ? process.env.REACT_APP_BACKEND_URL || '/api'
     : '/api',
   withCredentials: true,
