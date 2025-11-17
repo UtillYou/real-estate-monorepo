@@ -22,20 +22,25 @@ import { FeaturesModule } from './features/features.module';
     }),
     TypeOrmModule.forRoot({
       type: 'postgres',
-      host: process.env.POSTGRES_HOST || 'localhost',
-      port: parseInt(process.env.POSTGRES_PORT || '5432', 10),
-      username: process.env.POSTGRES_USER || 'postgres',
-      password: process.env.POSTGRES_PASSWORD || 'postgres',
-      database: process.env.POSTGRES_DB || 'realestate',
+      url: process.env.DATABASE_URL,
+      host: process.env.POSTGRES_HOST || process.env.PGHOST || 'localhost',
+      port: parseInt(
+        process.env.POSTGRES_PORT || process.env.PGPORT || '5432',
+        10,
+      ),
+      username: process.env.POSTGRES_USER || process.env.PGUSER || 'postgres',
+      password: process.env.POSTGRES_PASSWORD || process.env.PGPASSWORD || 'postgres',
+      database: process.env.POSTGRES_DB || process.env.PGDATABASE || 'realestate',
       entities: [User, Listing, RefreshToken, Feature],
-      synchronize: true, // set false in production
+      synchronize: false, // set false in production
+      ssl: process.env.DATABASE_URL ? { rejectUnauthorized: false } : false,
     }),
     TypeOrmModule.forFeature([User, RefreshToken]),
     AuthModule,
     ListingsModule,
     UploadsModule,
     UsersModule,
-    FeaturesModule
+    FeaturesModule,
   ],
   controllers: [AppController],
   providers: [AppService],
