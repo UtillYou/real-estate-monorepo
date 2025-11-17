@@ -1,10 +1,12 @@
 const { createProxyMiddleware } = require('http-proxy-middleware');
 
 module.exports = function(app) {
+  const backendUrl = process.env.REACT_APP_BACKEND_URL || 'http://localhost:3000';
+  
   app.use(
     '/api',
     createProxyMiddleware({
-      target: 'http://localhost:3000',
+      target: backendUrl,
       changeOrigin: true,
       pathRewrite: { '^/api': '' },
     })
@@ -12,7 +14,7 @@ module.exports = function(app) {
   app.use(
     '/uploads',
     createProxyMiddleware({
-      target: 'http://localhost:3000',
+      target: backendUrl,
       changeOrigin: true
     })
   );
