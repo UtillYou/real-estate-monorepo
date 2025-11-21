@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 import { AppController } from './app.controller';
@@ -16,20 +17,28 @@ import { FeaturesModule } from './features/features.module';
 
 @Module({
   imports: [
+    ConfigModule.forRoot({
+      isGlobal: true, // makes the config available throughout your app
+      envFilePath: '.env', // path to your .env file
+    }),
+    TypeOrmModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => ({
+        type: 'postgres',
+        host: configService.get<string>('PGHOST'),
+        port: configService.get<number>('PGPORT', 5432),
+        username: configService.get<string>('PGUSER'),
+        password: configService.get<string>('PGPASSWORD'),
+        database: configService.get<string>('PGDATABASE'),
+        entities: [User, Listing, RefreshToken, Feature],
+        synchronize: configService.get<string>('NODE_ENV') !== 'production',
+        ssl: false,
+      }),
+    }),
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', 'uploads'),
       serveRoot: '/uploads',
-    }),
-    TypeOrmModule.forRoot({
-      type: 'postgres',
-      host: process.env.PGHOST,
-      port: parseInt(process.env.PGPORT || '5432', 10),
-      username: process.env.PGUSER,
-      password: process.env.PGPASSWORD,
-      database: process.env.PGDATABASE,
-      entities: [User, Listing, RefreshToken, Feature],
-      synchronize: true, // set false in production
-      ssl: false,
     }),
     TypeOrmModule.forFeature([User, RefreshToken]),
     AuthModule,

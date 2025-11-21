@@ -8,6 +8,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AppModule = void 0;
 const common_1 = require("@nestjs/common");
+const config_1 = require("@nestjs/config");
 const serve_static_1 = require("@nestjs/serve-static");
 const path_1 = require("path");
 const app_controller_1 = require("./app.controller");
@@ -28,20 +29,28 @@ exports.AppModule = AppModule;
 exports.AppModule = AppModule = __decorate([
     (0, common_1.Module)({
         imports: [
+            config_1.ConfigModule.forRoot({
+                isGlobal: true,
+                envFilePath: '.env',
+            }),
+            typeorm_1.TypeOrmModule.forRootAsync({
+                imports: [config_1.ConfigModule],
+                inject: [config_1.ConfigService],
+                useFactory: (configService) => ({
+                    type: 'postgres',
+                    host: configService.get('PGHOST'),
+                    port: configService.get('PGPORT', 5432),
+                    username: configService.get('PGUSER'),
+                    password: configService.get('PGPASSWORD'),
+                    database: configService.get('PGDATABASE'),
+                    entities: [user_entity_1.User, listing_entity_1.Listing, refresh_token_entity_1.RefreshToken, feature_entity_1.Feature],
+                    synchronize: configService.get('NODE_ENV') !== 'production',
+                    ssl: false,
+                }),
+            }),
             serve_static_1.ServeStaticModule.forRoot({
                 rootPath: (0, path_1.join)(__dirname, '..', 'uploads'),
                 serveRoot: '/uploads',
-            }),
-            typeorm_1.TypeOrmModule.forRoot({
-                type: 'postgres',
-                host: process.env.PGHOST,
-                port: parseInt(process.env.PGPORT || '5432', 10),
-                username: process.env.PGUSER,
-                password: process.env.PGPASSWORD,
-                database: process.env.PGDATABASE,
-                entities: [user_entity_1.User, listing_entity_1.Listing, refresh_token_entity_1.RefreshToken, feature_entity_1.Feature],
-                synchronize: true,
-                ssl: false,
             }),
             typeorm_1.TypeOrmModule.forFeature([user_entity_1.User, refresh_token_entity_1.RefreshToken]),
             auth_module_1.AuthModule,
