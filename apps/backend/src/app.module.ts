@@ -14,8 +14,6 @@ import { UsersModule } from './users/users.module';
 import { Feature } from './features/feature.entity';
 import { FeaturesModule } from './features/features.module';
 
-console.log('wss env:', process.env);
-
 @Module({
   imports: [
     ServeStaticModule.forRoot({
@@ -24,15 +22,14 @@ console.log('wss env:', process.env);
     }),
     TypeOrmModule.forRoot({
       type: 'postgres',
-      url: process.env.DATABASE_URL,
       host: process.env.PGHOST || 'localhost',
       port: parseInt(process.env.PGPORT || '5432', 10),
       username: process.env.PGUSER || 'postgres',
       password: process.env.PGPASSWORD || 'postgres',
       database: process.env.PGDATABASE || 'realestate',
       entities: [User, Listing, RefreshToken, Feature],
-      synchronize: false, // set false in production
-      ssl: process.env.DATABASE_URL ? { rejectUnauthorized: false } : false,
+      synchronize: true, // set false in production
+      ssl: false,
     }),
     TypeOrmModule.forFeature([User, RefreshToken]),
     AuthModule,

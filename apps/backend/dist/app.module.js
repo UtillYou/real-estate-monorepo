@@ -22,7 +22,6 @@ const listings_module_1 = require("./listings/listings.module");
 const users_module_1 = require("./users/users.module");
 const feature_entity_1 = require("./features/feature.entity");
 const features_module_1 = require("./features/features.module");
-console.log('wss env:', process.env);
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -35,15 +34,14 @@ exports.AppModule = AppModule = __decorate([
             }),
             typeorm_1.TypeOrmModule.forRoot({
                 type: 'postgres',
-                url: process.env.DATABASE_URL,
                 host: process.env.PGHOST || 'localhost',
                 port: parseInt(process.env.PGPORT || '5432', 10),
                 username: process.env.PGUSER || 'postgres',
                 password: process.env.PGPASSWORD || 'postgres',
                 database: process.env.PGDATABASE || 'realestate',
                 entities: [user_entity_1.User, listing_entity_1.Listing, refresh_token_entity_1.RefreshToken, feature_entity_1.Feature],
-                synchronize: false,
-                ssl: process.env.DATABASE_URL ? { rejectUnauthorized: false } : false,
+                synchronize: true,
+                ssl: false,
             }),
             typeorm_1.TypeOrmModule.forFeature([user_entity_1.User, refresh_token_entity_1.RefreshToken]),
             auth_module_1.AuthModule,
