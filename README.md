@@ -27,3 +27,6 @@ real-estate-monorepo/
 
 ## Getting Started
 Instructions for setup and running each app will be provided after scaffolding.
+
+## start backend in server
+pm2 start npm --name "backend" -- start:prod

@@ -22,11 +22,11 @@ import { FeaturesModule } from './features/features.module';
     }),
     TypeOrmModule.forRoot({
       type: 'postgres',
-      host: process.env.PGHOST || 'localhost',
+      host: process.env.PGHOST,
       port: parseInt(process.env.PGPORT || '5432', 10),
-      username: process.env.PGUSER || 'postgres',
-      password: process.env.PGPASSWORD || 'postgres',
-      database: process.env.PGDATABASE || 'realestate',
+      username: process.env.PGUSER,
+      password: process.env.PGPASSWORD,
+      database: process.env.PGDATABASE,
       entities: [User, Listing, RefreshToken, Feature],
       synchronize: true, // set false in production
       ssl: false,
