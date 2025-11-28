@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { 
   Row, 
@@ -8,9 +8,7 @@ import {
   Select, 
   Button, 
   Typography, 
-  Space, 
   Slider, 
-  Checkbox,
   Divider,
   Empty,
   Spin
@@ -19,10 +17,9 @@ import {
   SearchOutlined, 
   FilterOutlined,
   HomeOutlined,
-  StarFilled,
   EnvironmentOutlined
 } from '@ant-design/icons';
-import { fetchListings, Listing, SearchParams } from '../api/listings';
+import { fetchListings,  SearchParams } from '../api/listings';
 import { useQuery } from '@tanstack/react-query';
 import './PropertiesList.css';
 
@@ -35,7 +32,9 @@ const PropertiesList: React.FC = () => {
   
   // Get filter values from URL params
   const query = searchParams.get('query') || '';
-  const propertyType = searchParams.get('type')?.split(',') || [];
+  const propertyType = useMemo(()=>{
+    return searchParams.get('type')?.split(',') || []
+  },[searchParams]);
   const minPrice = searchParams.get('minPrice') ? Number(searchParams.get('minPrice')) : undefined;
   const maxPrice = searchParams.get('maxPrice') ? Number(searchParams.get('maxPrice')) : undefined;
   const bedrooms = searchParams.get('bedrooms') ? Number(searchParams.get('bedrooms')) : undefined;
@@ -102,6 +101,9 @@ const PropertiesList: React.FC = () => {
   const handlePropertyClick = (id: number) => {
     navigate(`/property/${id}`);
   };
+
+  console.log('listings:',listings);
+  
 
   return (
     <div className="properties-page" style={{ maxWidth: 1400, margin: '0 auto', padding: '24px' }}>
@@ -254,7 +256,7 @@ const PropertiesList: React.FC = () => {
                   <div 
                     className="property-image"
                     style={{ 
-                      backgroundImage: `url(${listing.images?.[0] || 'https://via.placeholder.com/300x200'})` 
+                      backgroundImage: `url(${listing.images?.[0]?.url || 'https://via.placeholder.com/300x200'})` 
                     }}
                   />
                 }
