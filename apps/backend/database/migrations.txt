@@ -1,4 +1,0 @@
-psql -h localhost -U postgres -c "CREATE DATABASE realestate;"
-psql -h localhost -U postgres -d realestate -f ./create_users_table.sql
-psql -h localhost -U postgres -d realestate -c "DELETE FROM users;"
-psql -h localhost -U postgres -d realestate -f ./seed_admin.sql

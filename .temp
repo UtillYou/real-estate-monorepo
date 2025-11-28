@@ -11,3 +11,10 @@ sudo chown -R nginx:nginx /root/workspace/real-estate-monorepo
 # Set secure permissions
 sudo find /root/workspace/real-estate-monorepo -type d -exec chmod 755 {} \;
 sudo find /root/workspace/real-estate-monorepo -type f -exec chmod 644 {} \;
+
+psql -h localhost -U postgres -c "CREATE DATABASE realestate;"
+psql -h localhost -U postgres -d realestate -f ./create_users_table.sql
+psql -h localhost -U postgres -d realestate -c "DELETE FROM users;"
+psql -h localhost -U postgres -d realestate -f ./seed_admin.sql
+psql -h localhost -U real_estate_app_user -d realestate
+show all tables: \dt

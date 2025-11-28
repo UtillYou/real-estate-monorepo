@@ -29,4 +29,6 @@ real-estate-monorepo/
 Instructions for setup and running each app will be provided after scaffolding.
 
 ## start backend in server
+ssh -l root 121.43.99.72
+
 pm2 start npm --name "backend" -- start:prod
