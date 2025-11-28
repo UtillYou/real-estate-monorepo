@@ -1,4 +1,6 @@
 -- Replace the hash below with your actual bcrypt hash!
+-- // The admin password is ZJSMM195 and its hash is 
+-- // $2b$10$ep32tHl3NZIV.UV7ypYlbuIGgfyuLXvfC1aIjJLsiicsc/d/a1zwi
 INSERT INTO users (email, password, name, role)
 SELECT 'admin@example.com', '$2b$10$4vGFhR6wSPP1Jo/US4TvwutREfUpyer2CsBPAhNXGcEriHswrbhqW','admin', 'admin'
 WHERE NOT EXISTS (
@@ -18,3 +20,5 @@ psql -h localhost -U postgres -d realestate -c "DELETE FROM users;"
 psql -h localhost -U postgres -d realestate -f ./seed_admin.sql
 psql -h localhost -U real_estate_app_user -d realestate
 show all tables: \dt
+
+systemctl start nginx
